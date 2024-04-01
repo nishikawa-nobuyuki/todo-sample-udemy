@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { mutate } from 'swr';
 
 import { useMessageDialog } from '@/hooks/common/useMessageDialog';
-import { APIError } from '@/lib/api/error';
+import { APIError, ErrorCode } from '@/lib/api/error';
 import api from '@/lib/api/todo';
 import { message } from '@/lib/data/message';
 
@@ -22,8 +22,16 @@ export const useTodoDeleteTask: UseTodoDeleteTask = () => {
       // タスクを削除
       await api.todoDelete(id);
     } catch (e) {
-      if (APIError.isBadRequest(e)) {
-        await openErrorDialog(message.form.form01Error);
+      if (e instanceof APIError) {
+        switch (e.code) {
+          case ErrorCode.BadRequest:
+            await openErrorDialog(message.todo.badRequest);
+            break;
+          default:
+            await openErrorDialog(message.todo.internalServerError);
+        }
+      } else {
+        await openErrorDialog(message.todo.internalServerError);
       }
       ret = false;
     }

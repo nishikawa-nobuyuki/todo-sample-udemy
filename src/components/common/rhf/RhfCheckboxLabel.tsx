@@ -2,13 +2,13 @@ import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
 
 import CommonCheckbox from '@/components/common/parts/CommonCheckBox';
 
-type CommonCheckboxLabelProps = {
+type Props = {
   label: string;
 };
 
-type CheckBoxProps<T extends FieldValues> = UseControllerProps<T> & CommonCheckboxLabelProps;
+type CheckBoxProps<T extends FieldValues> = UseControllerProps<T> & Props;
 
-const CommonCheckboxLabel = <T extends FieldValues>(props: CheckBoxProps<T>): JSX.Element => {
+const RhfCheckboxLabel = <T extends FieldValues>(props: CheckBoxProps<T>): JSX.Element => {
   const { name, control, label } = props;
 
   const {
@@ -31,4 +31,4 @@ const CommonCheckboxLabel = <T extends FieldValues>(props: CheckBoxProps<T>): JS
   );
 };
 
-export default CommonCheckboxLabel;
+export default RhfCheckboxLabel;

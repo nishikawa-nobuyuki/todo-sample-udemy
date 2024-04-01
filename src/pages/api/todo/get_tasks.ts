@@ -9,7 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
   await sleep(1000);
   try {
     // リクエストの種類を検証;
-    if (req.method !== 'GET') {
+    if (req.method === 'GET') {
       throw new ServerCommonError(ErrorBody.BAD_REQUEST, ServerErrorMessage.BAD_REQUEST_METHOD);
     }
 

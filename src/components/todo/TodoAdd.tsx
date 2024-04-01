@@ -1,6 +1,6 @@
-import CommonInput from '@/components/common/CommonInput';
 import Button from '@/components/common/parts/Button';
 import CommonDialog from '@/components/common/parts/CommonDialog';
+import RhfInput from '@/components/common/rhf/RhfInput';
 import { useTodoAdd } from '@/hooks/todo/useTodoAdd';
 
 const TodoAdd = (): JSX.Element => {
@@ -17,12 +17,7 @@ const TodoAdd = (): JSX.Element => {
       >
         <div className="mb-3">
           <label className="text-h3">タスク名</label>
-          <CommonInput
-            name="title"
-            control={control}
-            className="mt-2 w-full"
-            placeholder="タスク名"
-          />
+          <RhfInput name="title" control={control} className="mt-2 w-full" placeholder="タスク名" />
         </div>
 
         <div className="mt-8 flex space-x-2">

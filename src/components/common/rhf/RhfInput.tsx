@@ -3,7 +3,7 @@ import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
 type InputProps<T extends FieldValues> = React.InputHTMLAttributes<HTMLInputElement> &
   UseControllerProps<T>;
 
-const CommonInput = <T extends FieldValues>(props: InputProps<T>): JSX.Element => {
+const RhfInput = <T extends FieldValues>(props: InputProps<T>): JSX.Element => {
   const { name, control, className = '', ...inputAttributes } = props;
   const {
     field: { ...inputProps },
@@ -32,4 +32,4 @@ const CommonInput = <T extends FieldValues>(props: InputProps<T>): JSX.Element =
   );
 };
 
-export default CommonInput;
+export default RhfInput;

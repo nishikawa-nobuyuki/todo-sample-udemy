@@ -1,24 +1,23 @@
 /* eslint-disable */
+
+export const ErrorCode = {
+  BadRequest: 'E0000',
+  NotFoundedTask: 'E0001',
+  InternalServerError: 'E0002',
+} as const;
+
+export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode];
+
 export class APIError extends Error {
   statusCode: number;
-  data: any;
+  code: string;
   constructor(statusCode: number, data: any) {
     super(data?.message ?? 'no message');
-
+    this.code = data.code;
     this.statusCode = statusCode < 0 ? 500 : statusCode;
-    this.data = data;
   }
 
   static getCodeString(e: unknown): string {
-    return e instanceof APIError ? String(e.statusCode) : 'none';
-  }
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  // ステータスコード 400
-  static isBadRequest(e: unknown): boolean {
-    if (e instanceof APIError) {
-      return e.statusCode === 400 && e.data?.type === 'BadRequest';
-    }
-    return false;
+    return e instanceof APIError ? String(e.code) : 'none';
   }
 }

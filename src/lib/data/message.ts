@@ -11,14 +11,15 @@
  */
 
 export const message = {
-  form: {
-    form01: {
-      title: 'アカウントの作成が完了しました',
-      content: 'お疲れ様です。',
+  todo: {
+    badRequest: {
+      title: 'リクエストが不正です。',
     },
-    form01Error: {
-      title: 'アカウントの作成に失敗しました',
-      content: '残念でした。',
+    notFoundedTask: {
+      title: 'タスクが存在しません。',
+    },
+    internalServerError: {
+      title: '処理が失敗しました。',
     },
   },
 };

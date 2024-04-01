@@ -1,7 +1,7 @@
-import CommonCheckboxLabel from '@/components/common/CommonCheckBoxLabel';
-import CommonInput from '@/components/common/CommonInput';
 import Button from '@/components/common/parts/Button';
 import CommonDialog from '@/components/common/parts/CommonDialog';
+import RhfCheckboxLabel from '@/components/common/rhf/RhfCheckboxLabel';
+import RhfInput from '@/components/common/rhf/RhfInput';
 import { useTodoEdit } from '@/hooks/todo/useTodoEdit';
 import { Task } from '@/lib/common/Task';
 
@@ -31,16 +31,14 @@ const TodoEdit = (props: Props): JSX.Element => {
         handleClose={handleClose}
         className="max-w-sm"
       >
+        {/* タスク入力ラベル */}
         <div className="mb-3">
           <label className="text-h3">タスク名</label>
-          <CommonInput
-            name="title"
-            control={control}
-            className="mt-2 w-full"
-            placeholder="タスク名"
-          />
+          <RhfInput name="title" control={control} className="mt-2 w-full" placeholder="タスク名" />
         </div>
-        <CommonCheckboxLabel label="達成済み" name="completed" control={control} />
+
+        {/* 「達成済み」のチェックボックス */}
+        <RhfCheckboxLabel label="達成済み" name="completed" control={control} />
         <div className="mt-8 flex space-x-2">
           {/* タスク名を変更する */}
           <Button

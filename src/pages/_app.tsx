@@ -1,8 +1,10 @@
 import { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { RecoilRoot } from 'recoil';
 
+import ErrorFallbackApp from '@/components/common/ErrorFallbackApp';
 import LoadingScreen from '@/components/common/LoadingScreen';
 
 import '@/styles/globals.css';
@@ -15,9 +17,11 @@ function MyApp({ Component, pageProps: { ...pageProps } }: AppProps): JSX.Elemen
   return (
     <DynamicContainer>
       <RecoilRoot>
-        <Suspense fallback={<LoadingScreen />}>
-          <Component {...pageProps} />
-        </Suspense>
+        <ErrorBoundary FallbackComponent={ErrorFallbackApp}>
+          <Suspense fallback={<LoadingScreen />}>
+            <Component {...pageProps} />
+          </Suspense>
+        </ErrorBoundary>
       </RecoilRoot>
     </DynamicContainer>
   );
