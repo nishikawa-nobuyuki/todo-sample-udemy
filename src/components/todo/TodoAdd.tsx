@@ -4,7 +4,8 @@ import CommonDialog from '@/components/common/parts/CommonDialog';
 import { useTodoAdd } from '@/hooks/todo/useTodoAdd';
 
 const TodoAdd = (): JSX.Element => {
-  const { isOpen, control, handleOpen, handleClose, handleClickUpdate } = useTodoAdd();
+  const { isOpen, control, handleOpen, handleClose, handleClickUpdate, loadingApiTodoAdd } =
+    useTodoAdd();
 
   return (
     <>
@@ -25,9 +26,15 @@ const TodoAdd = (): JSX.Element => {
         </div>
 
         <div className="mt-8 flex space-x-2">
-          {/* タグ名を変更する */}
-          <Button onClick={handleClickUpdate} variant="primary" label="変更を保存" />
+          {/* タスクを追加する */}
+          <Button
+            loading={loadingApiTodoAdd}
+            onClick={handleClickUpdate}
+            variant="primary"
+            label="追加"
+          />
 
+          {/* ダイアログを閉じる */}
           <Button onClick={handleClose} variant="text" label="閉じる" />
         </div>
       </CommonDialog>

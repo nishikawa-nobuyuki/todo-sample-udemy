@@ -12,7 +12,6 @@ const api = {
   url: (): string => '/todo/todo',
   todoGet: async (): Promise<Task[]> => {
     const data = await httpWrapper.get('/api/todo/get_tasks', {});
-    console.log(data.records.map((record: any) => new Task(record)));
     return data.records.map((record: any) => new Task(record));
   },
   todoAdd: async (title: string): Promise<void> => {

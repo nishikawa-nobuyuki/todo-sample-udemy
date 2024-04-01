@@ -1,5 +1,4 @@
-import useSWR from 'swr';
-
+import { useSWRSuspense } from '@/hooks/common/useSWRSuspense';
 import { APIError } from '@/lib/api/error';
 import api from '@/lib/api/todo';
 import { Task } from '@/lib/common/Task';
@@ -9,7 +8,10 @@ type UseTodoGetTasks = () => {
 };
 
 export const useTodoGetTasks: UseTodoGetTasks = () => {
-  const { data } = useSWR<Task[], APIError>(api.url(), (): Promise<Task[]> => api.todoGet());
+  const { data } = useSWRSuspense<Task[], APIError>(
+    api.url(),
+    (): Promise<Task[]> => api.todoGet(),
+  );
 
-  return { taskList: data ?? [] };
+  return { taskList: data };
 };

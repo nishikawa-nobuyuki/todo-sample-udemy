@@ -2,9 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { ErrorBody, ServerCommonError } from '@/lib/api/server/error.server';
 import { UtilErrorCodes, getTasks } from '@/lib/api/server/todoUtil.server';
+import { sleep } from '@/lib/common/timeSleep';
 import { ServerErrorMessage } from '@/lib/data/serverErrorMessage';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
+  await sleep(1000);
   try {
     // リクエストの種類を検証;
     if (req.method !== 'GET') {

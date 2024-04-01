@@ -19,9 +19,12 @@ const TodoEdit = (props: Props): JSX.Element => {
     handleClickUpdate,
     handleTaskDelete,
     loadingTodoUpdate,
+    loadingTodoDelete,
+    isTaskChanged,
   } = useTodoEdit({ task });
   return (
     <>
+      {/* ダイアログ */}
       <CommonDialog
         canCloseOtherClick={false}
         isOpen={isOpen}
@@ -39,17 +42,28 @@ const TodoEdit = (props: Props): JSX.Element => {
         </div>
         <CommonCheckboxLabel label="達成済み" name="completed" control={control} />
         <div className="mt-8 flex space-x-2">
-          {/* タグ名を変更する */}
+          {/* タスク名を変更する */}
           <Button
             onClick={handleClickUpdate}
             variant="primary"
             label="変更を保存"
             loading={loadingTodoUpdate}
+            disabled={!isTaskChanged}
           />
-          <Button onClick={handleTaskDelete} variant="error" label="削除" />
+          {/* タスクを削除 */}
+          <Button
+            loading={loadingTodoDelete}
+            onClick={handleTaskDelete}
+            variant="error"
+            label="削除"
+          />
+
+          {/* 閉じる */}
           <Button onClick={handleClose} variant="text" label="閉じる" />
         </div>
       </CommonDialog>
+
+      {/* タスクの表示 */}
       <span
         onClick={handleOpen}
         className="mr-2 cursor-pointer rounded-full bg-primary px-2 py-1 text-body2 text-white"

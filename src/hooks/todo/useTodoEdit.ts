@@ -14,11 +14,6 @@ const schema = z.object({
 
 type TaskInput = z.infer<typeof schema>;
 
-const DEFAULT_TASK_INPUT = {
-  title: '',
-  completed: false,
-};
-
 type UseTodoEdit = (args: { task: Task }) => {
   isOpen: boolean;
   control: Control<TaskInput>;
@@ -27,14 +22,16 @@ type UseTodoEdit = (args: { task: Task }) => {
   handleClickUpdate: () => Promise<void>;
   handleTaskDelete: () => Promise<void>;
   loadingTodoUpdate: boolean;
+  loadingTodoDelete: boolean;
+  isTaskChanged: boolean;
 };
 
 export const useTodoEdit: UseTodoEdit = (props) => {
   const { task } = props;
   const [isOpen, setIsOpen] = useState(false);
-  const { control, handleSubmit, setValue, reset } = useForm<TaskInput>({
+  const { control, handleSubmit, setValue, reset, watch } = useForm<TaskInput>({
     resolver: zodResolver(schema),
-    defaultValues: DEFAULT_TASK_INPUT,
+    defaultValues: task,
   });
   const handleClose = () => {
     setIsOpen(false);
@@ -61,7 +58,11 @@ export const useTodoEdit: UseTodoEdit = (props) => {
   const apiTodoDelete = useTodoDeleteTask();
   const handleTaskDelete = async () => {
     await apiTodoDelete.execute(task.id);
+    handleClose();
   };
+
+  // タスクに変更が加えられたかどうか
+  const isTaskChanged = watch('title') !== task.title || watch('completed') !== task.completed;
 
   return {
     isOpen,
@@ -71,5 +72,7 @@ export const useTodoEdit: UseTodoEdit = (props) => {
     handleClickUpdate: handleSubmit(onSubmit),
     handleTaskDelete,
     loadingTodoUpdate: apiTodoUpdate.loading,
+    loadingTodoDelete: apiTodoDelete.loading,
+    isTaskChanged,
   };
 };

@@ -21,6 +21,7 @@ type UseTodoAdd = () => {
   handleOpen: () => void;
   handleClose: () => void;
   handleClickUpdate: () => Promise<void>;
+  loadingApiTodoAdd: boolean;
 };
 
 export const useTodoAdd: UseTodoAdd = () => {
@@ -37,7 +38,7 @@ export const useTodoAdd: UseTodoAdd = () => {
     setIsOpen(true);
   };
 
-  // タスクを更新
+  // タスクを追加
   const apiTodoAdd = useTodoAddTask();
   const onSubmit = async (data: TaskInput) => {
     const { title } = data;
@@ -55,5 +56,6 @@ export const useTodoAdd: UseTodoAdd = () => {
     handleOpen,
     handleClose,
     handleClickUpdate: handleSubmit(onSubmit),
+    loadingApiTodoAdd: apiTodoAdd.loading,
   };
 };
