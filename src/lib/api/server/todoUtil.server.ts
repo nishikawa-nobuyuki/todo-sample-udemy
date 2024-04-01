@@ -7,13 +7,13 @@ const DATA_DIR = path.join(process.cwd(), 'src/db');
 
 const FILE_NAME = 'data.json';
 
-export const ErrorCodes = {
+export const UtilErrorCodes = {
   FAILED_TO_LOAD_TASK: 'failedToLoadTask',
   NOT_FOUND_TASK: 'notFoundTask',
   OTHER_ERROR: 'otherError',
 } as const;
 
-export type ErrorCodes = (typeof ErrorCodes)[keyof typeof ErrorCodes];
+export type UtilErrorCodes = (typeof UtilErrorCodes)[keyof typeof UtilErrorCodes];
 
 class SuccessResponse<T> {
   isSuccess: true;
@@ -27,9 +27,9 @@ class SuccessResponse<T> {
 
 class ErrorResponse {
   isSuccess: false;
-  errorCode: ErrorCodes;
+  errorCode: UtilErrorCodes;
 
-  constructor(errorCode: ErrorCodes) {
+  constructor(errorCode: UtilErrorCodes) {
     this.isSuccess = false;
     this.errorCode = errorCode;
   }
@@ -45,7 +45,7 @@ export const getTasks = async (): Promise<UtilResponse<Task[]>> => {
     return new SuccessResponse(taskList);
   } catch (error) {
     console.error('タスクの読み込み中にエラーが発生しました:', error);
-    return new ErrorResponse(ErrorCodes.NOT_FOUND_TASK);
+    return new ErrorResponse(UtilErrorCodes.FAILED_TO_LOAD_TASK);
   }
 };
 
@@ -53,7 +53,7 @@ export const getTasks = async (): Promise<UtilResponse<Task[]>> => {
 export const addTask = async (title: string): Promise<UtilResponse<null>> => {
   const getTaskResponse = await getTasks();
   if (!getTaskResponse.isSuccess) {
-    return new ErrorResponse(ErrorCodes.FAILED_TO_LOAD_TASK);
+    return new ErrorResponse(UtilErrorCodes.FAILED_TO_LOAD_TASK);
   }
   const taskList = getTaskResponse.data;
 
@@ -70,14 +70,14 @@ export const updateTask = async (
 ): Promise<UtilResponse<null>> => {
   const getTaskResponse = await getTasks();
   if (!getTaskResponse.isSuccess) {
-    return new ErrorResponse(ErrorCodes.FAILED_TO_LOAD_TASK);
+    return new ErrorResponse(UtilErrorCodes.FAILED_TO_LOAD_TASK);
   }
   const taskList = getTaskResponse.data;
 
   // 該当の taskId をもつ Task が存在するかどうかを判定する。存在しなかった場合は何もしない。
   const selectedTaskIndex = taskList.findIndex((task) => task.id === id);
   if (selectedTaskIndex === -1) {
-    return new ErrorResponse(ErrorCodes.NOT_FOUND_TASK);
+    return new ErrorResponse(UtilErrorCodes.NOT_FOUND_TASK);
   }
 
   const newTaskList = taskList.map((task) => {
@@ -96,7 +96,7 @@ export const deleteTask = async (id: string): Promise<UtilResponse<null>> => {
   const getTaskResponse = await getTasks();
 
   if (!getTaskResponse.isSuccess) {
-    return new ErrorResponse(ErrorCodes.FAILED_TO_LOAD_TASK);
+    return new ErrorResponse(UtilErrorCodes.FAILED_TO_LOAD_TASK);
   }
   const taskList = getTaskResponse.data;
 

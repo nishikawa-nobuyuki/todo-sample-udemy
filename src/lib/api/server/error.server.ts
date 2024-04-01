@@ -1,14 +1,18 @@
+import { logError } from '@/lib/common/logError.server';
+import { ServerErrorMessage } from '@/lib/data/serverErrorMessage';
+
 export class ServerCommonError extends Error {
   type: string;
   message: string;
   code: string;
   status: number;
-  constructor(args: ErrorBody) {
-    super(args.message);
-    this.type = args.type;
-    this.message = args.message;
-    this.code = args.code;
-    this.status = args.status;
+  constructor(body: ErrorBody, errorMessage: ServerErrorMessage) {
+    logError(errorMessage);
+    super(body.message);
+    this.type = body.type;
+    this.message = body.message;
+    this.code = body.code;
+    this.status = body.status;
   }
 }
 
@@ -18,6 +22,12 @@ export const ErrorBody = {
     type: 'BadRequest',
     message: 'パラメータに不備があります',
     status: 400,
+  },
+  NOT_FOUNDED_TASK: {
+    code: 'E0002',
+    type: 'NotFoundedTask',
+    message: 'タスクが見つかりません',
+    status: 404,
   },
   INTERNAL_SERVER_ERROR: {
     code: 'E0001',

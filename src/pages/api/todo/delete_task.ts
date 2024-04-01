@@ -1,19 +1,51 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { deleteTask } from '@/lib/api/todoUtil.server';
+import { ErrorBody, ServerCommonError } from '@/lib/api/server/error.server';
+import { UtilErrorCodes, deleteTask } from '@/lib/api/server/todoUtil.server';
+import { ServerErrorMessage } from '@/lib/data/serverErrorMessage';
 
 type ReqBody = {
   id: string;
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
-  if (req.method === 'DELETE') {
+  try {
+    // リクエストの種類を検証;
+    if (req.method !== 'DELETE') {
+      throw new ServerCommonError(ErrorBody.BAD_REQUEST, ServerErrorMessage.BAD_REQUEST_METHOD);
+    }
     const { id } = req.body as ReqBody;
-    await deleteTask(id);
+
+    // リクエストボディの検証
+    if (!id) {
+      throw new ServerCommonError(ErrorBody.BAD_REQUEST, ServerErrorMessage.BAD_REQUEST_BODY);
+    }
+
+    const deleteTaskResponse = await deleteTask(id);
+
+    if (!deleteTaskResponse.isSuccess) {
+      switch (deleteTaskResponse.errorCode) {
+        case UtilErrorCodes.FAILED_TO_LOAD_TASK:
+          throw new ServerCommonError(
+            ErrorBody.INTERNAL_SERVER_ERROR,
+            ServerErrorMessage.FAILED_TO_LOAD_TASK,
+          );
+        default:
+          throw new ServerCommonError(
+            ErrorBody.INTERNAL_SERVER_ERROR,
+            ServerErrorMessage.INTERNAL_SERVER_ERROR,
+          );
+      }
+    }
     res.status(204).json({});
-  } else {
-    res.setHeader('Allow', 'DELETE');
-    res.status(405).end('Method Not Allowed');
+  } catch (error) {
+    if (!(error instanceof ServerCommonError)) {
+      const { status, ...errorDetails } = ErrorBody.INTERNAL_SERVER_ERROR;
+      res.status(status).json(errorDetails);
+    }
+    const serverError = error as ServerCommonError;
+    const { status, ...errorDetails } = serverError;
+    res.status(status).json(errorDetails);
   }
 };
 
