@@ -1,12 +1,12 @@
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 
-type InputProps<T extends FieldValues> = React.InputHTMLAttributes<HTMLInputElement> &
-  UseControllerProps<T>;
+type InputProps<T extends FieldValues> = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'name'> &
+  Pick<UseControllerProps<T>, 'name' | 'control'>;
 
 const RhfInput = <T extends FieldValues>(props: InputProps<T>): JSX.Element => {
   const { name, control, className = '', ...inputAttributes } = props;
   const {
-    field: { ...inputProps },
+    field,
     fieldState: { error },
   } = useController({
     name,
@@ -19,8 +19,7 @@ const RhfInput = <T extends FieldValues>(props: InputProps<T>): JSX.Element => {
         className={`rounded border px-4 py-2 text-input outline-none placeholder:text-theme-medium focus:border-primary ${
           error ? 'border-error' : 'border-theme-medium'
         } ${className}`}
-        id={name}
-        {...inputProps}
+        {...field}
         {...inputAttributes}
       />
       {error && (

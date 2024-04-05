@@ -2,34 +2,24 @@ import { atom } from 'recoil';
 
 import { __log } from '@/lib/common/log';
 
-// ダイアログの種類
-export const DialogTypes = {
-  Confirm: 'confirm',
-  Message: 'message',
-  Error: 'error',
-};
-export type DialogType = (typeof DialogTypes)[keyof typeof DialogTypes];
-
 // ボタンへの設定
-export type MessageDialogAction = {
+export type ErrorDialogAction = {
   handleClick: () => void;
 };
 
-export type MessageDialogState = {
+export type ErrorDialogState = {
   title: string;
   content?: string;
-  dialogType: DialogType;
   isOpen: boolean;
-  actions: MessageDialogAction[];
+  actions: ErrorDialogAction[];
   labels?: (string | undefined)[];
 };
 
-export const messageDialogState = atom<MessageDialogState>({
-  key: 'messageDialogState',
+export const errorDialogState = atom<ErrorDialogState>({
+  key: 'errorDialogState',
   default: {
     title: '',
     content: '',
-    dialogType: DialogTypes.Message,
     isOpen: false,
     actions: [
       {

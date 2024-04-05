@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { RecoilRoot } from 'recoil';
 
+import ErrorDialog from '@/components/common/ErrorDialog';
 import ErrorFallbackApp from '@/components/common/ErrorFallbackApp';
 import LoadingScreen from '@/components/common/LoadingScreen';
 
@@ -20,6 +21,7 @@ function MyApp({ Component, pageProps: { ...pageProps } }: AppProps): JSX.Elemen
         <ErrorBoundary FallbackComponent={ErrorFallbackApp}>
           <Suspense fallback={<LoadingScreen />}>
             <Component {...pageProps} />
+            <ErrorDialog />
           </Suspense>
         </ErrorBoundary>
       </RecoilRoot>

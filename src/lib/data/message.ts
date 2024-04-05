@@ -1,5 +1,5 @@
 /**
- * useMessageDialog() で表示するダイアログに渡すメッセージ等の一覧
+ * useErrorDialog() で表示するダイアログに渡すメッセージ等の一覧
  *
  * 【第一階層】機能ごとに分ける
  * - e.g) material, tag, ...

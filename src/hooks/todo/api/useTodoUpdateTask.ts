@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { mutate } from 'swr';
 
-import { useMessageDialog } from '@/hooks/common/useMessageDialog';
+import { useErrorDialog } from '@/hooks/common/useErrorDialog';
 import { APIError, ErrorCode } from '@/lib/api/error';
 import api from '@/lib/api/todo';
 import { message } from '@/lib/data/message';
@@ -13,7 +13,7 @@ type UseTodoUpdateTask = () => {
 
 export const useTodoUpdateTask: UseTodoUpdateTask = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { openErrorDialog } = useMessageDialog();
+  const { openErrorDialog } = useErrorDialog();
 
   const execute = async (id: string, fields: { title?: string; completed?: boolean }) => {
     let ret = true;
