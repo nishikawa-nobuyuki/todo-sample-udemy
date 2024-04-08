@@ -27,9 +27,6 @@ export const useTodoAddTask: UseTodoAddTask = () => {
           case ErrorCode.BadRequest:
             await openErrorDialog(message.todo.badRequest);
             break;
-          case ErrorCode.NotFoundedTask:
-            await openErrorDialog(message.todo.notFoundedTask);
-            break;
           default:
             await openErrorDialog(message.todo.internalServerError);
         }

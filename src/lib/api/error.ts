@@ -11,10 +11,12 @@ export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode];
 export class APIError extends Error {
   statusCode: number;
   code: string;
+  type: string;
   constructor(statusCode: number, data: any) {
     super(data?.message ?? 'no message');
     this.code = data.code;
     this.statusCode = statusCode < 0 ? 500 : statusCode;
+    this.type = data.type;
   }
 
   static getCodeString(e: unknown): string {
