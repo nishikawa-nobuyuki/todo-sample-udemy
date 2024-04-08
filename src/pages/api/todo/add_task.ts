@@ -27,10 +27,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
 
     if (!addTaskResponse.isSuccess) {
       switch (addTaskResponse.errorCode) {
-        case UtilErrorCodes.NOT_FOUND_TASK:
+        case UtilErrorCodes.FAILED_TO_LOAD_TASK:
           throw new ServerCommonError(
-            ErrorBody.NOT_FOUNDED_TASK,
-            ServerErrorMessage.NOT_FOUNDED_TASK,
+            ErrorBody.INTERNAL_SERVER_ERROR,
+            ServerErrorMessage.FAILED_TO_LOAD_TASK,
           );
         default:
           throw new ServerCommonError(
