@@ -39,7 +39,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
           );
       }
     }
-    res.status(204).json({});
+    res.status(204).end();
   } catch (error) {
     if (!(error instanceof ServerCommonError)) {
       const { status, ...errorDetails } = ErrorBody.INTERNAL_SERVER_ERROR;
