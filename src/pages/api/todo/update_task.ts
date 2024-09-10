@@ -7,7 +7,7 @@ import { ServerErrorMessage } from '@/lib/data/serverErrorMessage';
 
 type ReqBody = {
   id: string;
-  fields: { title?: string; completed?: boolean };
+  fields: { title?: string; completed?: boolean; deadline?: string };
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {

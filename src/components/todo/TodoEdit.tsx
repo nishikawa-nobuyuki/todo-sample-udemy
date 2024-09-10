@@ -21,6 +21,7 @@ const TodoEdit = (props: Props): JSX.Element => {
     loadingTodoUpdate,
     loadingTodoDelete,
     isTaskChanged,
+    isOverDeadline,
   } = useTodoEdit({ task });
   return (
     <>
@@ -35,6 +36,18 @@ const TodoEdit = (props: Props): JSX.Element => {
         <div className="mb-3">
           <label className="text-h3">タスク名</label>
           <RhfInput name="title" control={control} className="mt-2 w-full" placeholder="タスク名" />
+        </div>
+
+        {/* 期限日入力ラベル */}
+        <div className="mb-3">
+          <label className="text-h3">期限</label>
+          <RhfInput
+            name="deadline"
+            control={control}
+            type="date"
+            className="mt-2 w-full"
+            placeholder="タスク名"
+          />
         </div>
 
         {/* 「達成済み」のチェックボックス */}
@@ -62,12 +75,17 @@ const TodoEdit = (props: Props): JSX.Element => {
       </CommonDialog>
 
       {/* タスクの表示 */}
-      <span
+
+      <button
         onClick={handleOpen}
-        className="mr-2 cursor-pointer rounded-full bg-primary px-2 py-1 text-body2 text-white"
+        className={`mr-2 mt-3 cursor-pointer rounded-md ${!isOverDeadline(task.deadline) || task.completed ? 'bg-primary' : 'bg-red-500'} px-2 py-1 text-body2 text-white`}
       >
-        {task.title}
-      </span>
+        <h3 className="text-h3">{task.title}</h3>
+        <p className="text-sm">{`作成日: ${task.startDate}`}</p>
+        {!task.completed && (
+          <p className="text-sm">{`期限日: ${task.deadline.replace(/-/g, '/')}`}</p>
+        )}
+      </button>
     </>
   );
 };

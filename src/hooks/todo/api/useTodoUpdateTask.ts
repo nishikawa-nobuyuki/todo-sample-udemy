@@ -7,7 +7,10 @@ import api from '@/lib/api/todo';
 import { message } from '@/lib/data/message';
 
 type UseTodoUpdateTask = () => {
-  execute: (id: string, fields: { title?: string; completed?: boolean }) => Promise<boolean>;
+  execute: (
+    id: string,
+    fields: { title?: string; completed?: boolean; deadline?: string },
+  ) => Promise<boolean>;
   loading: boolean;
 };
 
@@ -15,7 +18,10 @@ export const useTodoUpdateTask: UseTodoUpdateTask = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const { openErrorDialog } = useErrorDialog();
 
-  const execute = async (id: string, fields: { title?: string; completed?: boolean }) => {
+  const execute = async (
+    id: string,
+    fields: { title?: string; completed?: boolean; deadline?: string },
+  ) => {
     let ret = true;
     setLoading(true);
     try {

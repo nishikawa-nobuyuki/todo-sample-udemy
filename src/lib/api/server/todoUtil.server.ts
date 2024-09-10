@@ -37,6 +37,15 @@ class ErrorResponse {
 
 export type UtilResponse<T> = SuccessResponse<T> | ErrorResponse;
 
+const getToday = () => {
+  const now = new Date(Date.now());
+  const year = String(now.getFullYear());
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+
+  return `${year}/${month}/${day}`;
+};
+
 // タスクを取得
 export const getTasks = async (): Promise<UtilResponse<Task[]>> => {
   try {
@@ -50,23 +59,29 @@ export const getTasks = async (): Promise<UtilResponse<Task[]>> => {
 };
 
 // タスクの追加
-export const addTask = async (title: string): Promise<UtilResponse<null>> => {
+export const addTask = async (title: string, deadline: string): Promise<UtilResponse<null>> => {
   const getTaskResponse = await getTasks();
   if (!getTaskResponse.isSuccess) {
     return new ErrorResponse(UtilErrorCodes.FAILED_TO_LOAD_TASK);
   }
   const taskList = getTaskResponse.data;
 
-  const newTask: Task = { id: Date.now().toString(), title, completed: false };
+  const newTask: Task = {
+    id: Date.now().toString(),
+    title,
+    completed: false,
+    startDate: getToday(),
+    deadline,
+  };
   const newTaskList = [...taskList, newTask];
   await fs.writeFile(path.join(DATA_DIR, FILE_NAME), JSON.stringify(newTaskList));
   return new SuccessResponse(null);
 };
 
-// id を指定して、title もしくは completed を更新
+// id を指定して、title, completed, deadline を更新
 export const updateTask = async (
   id: string,
-  fields: { title?: string; completed?: boolean },
+  fields: { title?: string; completed?: boolean; deadline?: string },
 ): Promise<UtilResponse<null>> => {
   const getTaskResponse = await getTasks();
   if (!getTaskResponse.isSuccess) {

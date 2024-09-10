@@ -7,6 +7,7 @@ import { ServerErrorMessage } from '@/lib/data/serverErrorMessage';
 
 type ReqBody = {
   title: string;
+  deadline: string;
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
@@ -16,14 +17,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
     if (req.method !== 'POST') {
       throw new ServerCommonError(ErrorBody.BAD_REQUEST, ServerErrorMessage.BAD_REQUEST_METHOD);
     }
-    const { title } = req.body as ReqBody;
+    const { title, deadline } = req.body as ReqBody;
 
     // リクエストボディの検証
-    if (!title) {
+    if (!title || !deadline) {
       throw new ServerCommonError(ErrorBody.BAD_REQUEST, ServerErrorMessage.BAD_REQUEST_BODY);
     }
 
-    const addTaskResponse = await addTask(title);
+    const addTaskResponse = await addTask(title, deadline);
 
     if (!addTaskResponse.isSuccess) {
       switch (addTaskResponse.errorCode) {

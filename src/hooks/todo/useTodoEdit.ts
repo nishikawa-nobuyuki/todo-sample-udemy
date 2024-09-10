@@ -10,6 +10,7 @@ import { Task } from '@/lib/common/Task';
 const schema = z.object({
   title: z.string().min(1, 'タスク名を入力してください').max(50, '50文字以内で入力してください'),
   completed: z.boolean(),
+  deadline: z.string().min(1, '期限日を入力してください'),
 });
 
 type TaskInput = z.infer<typeof schema>;
@@ -24,12 +25,13 @@ type UseTodoEdit = (args: { task: Task }) => {
   loadingTodoUpdate: boolean;
   loadingTodoDelete: boolean;
   isTaskChanged: boolean;
+  isOverDeadline: (date: string) => boolean;
 };
 
 export const useTodoEdit: UseTodoEdit = (props) => {
   const { task } = props;
   const [isOpen, setIsOpen] = useState(false);
-  const { control, handleSubmit, setValue, reset, watch } = useForm<TaskInput>({
+  const { control, handleSubmit, setValue, watch } = useForm<TaskInput>({
     resolver: zodResolver(schema),
     defaultValues: task,
   });
@@ -39,18 +41,18 @@ export const useTodoEdit: UseTodoEdit = (props) => {
   const handleOpen = () => {
     setValue('title', task.title);
     setValue('completed', task.completed);
+    setValue('deadline', task.deadline);
     setIsOpen(true);
   };
 
   // タスクを更新
   const apiTodoUpdate = useTodoUpdateTask();
   const onSubmit = async (data: TaskInput) => {
-    const { title, completed } = data;
-    const isSuccess = await apiTodoUpdate.execute(task.id, { title, completed });
+    const { title, completed, deadline } = data;
+    const isSuccess = await apiTodoUpdate.execute(task.id, { title, completed, deadline });
     if (!isSuccess) {
       return; // 何もしない
     }
-    reset();
     handleClose();
   };
 
@@ -62,7 +64,15 @@ export const useTodoEdit: UseTodoEdit = (props) => {
   };
 
   // タスクに変更が加えられたかどうか
-  const isTaskChanged = watch('title') !== task.title || watch('completed') !== task.completed;
+  const isTaskChanged =
+    watch('title') !== task.title ||
+    watch('completed') !== task.completed ||
+    watch('deadline') !== task.deadline;
+
+  // タスクの期限が過ぎているかどうか
+  const isOverDeadline = (date: string) => {
+    return new Date(Date.now()) > new Date(date);
+  };
 
   return {
     isOpen,
@@ -74,5 +84,6 @@ export const useTodoEdit: UseTodoEdit = (props) => {
     loadingTodoUpdate: apiTodoUpdate.loading,
     loadingTodoDelete: apiTodoDelete.loading,
     isTaskChanged,
+    isOverDeadline,
   };
 };

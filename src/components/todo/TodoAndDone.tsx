@@ -8,17 +8,21 @@ const TodoAndDone = (): JSX.Element => {
       {/* TO DO を表示 */}
       <div className="mt-8 rounded-md border p-4">
         <h2 className="mb-3 text-h3">TODO</h2>
-        {notCompletedTasks.map((task) => (
-          <TodoEdit task={{ ...task }} key={task.id} />
-        ))}
+        <div className="flex flex-wrap">
+          {notCompletedTasks.map((task) => (
+            <TodoEdit task={{ ...task }} key={task.id} />
+          ))}
+        </div>
       </div>
 
       {/* Done を表示 */}
       <div className="mt-4 rounded-md border p-4">
         <h2 className="mb-3 text-h3">DONE</h2>
-        {completedTasks.map((task) => (
-          <TodoEdit task={{ ...task }} key={task.id} />
-        ))}
+        <div className="flex flex-wrap">
+          {completedTasks.map((task) => (
+            <TodoEdit task={{ ...task }} key={task.id} />
+          ))}
+        </div>
       </div>
     </>
   );
