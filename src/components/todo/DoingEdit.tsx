@@ -2,14 +2,14 @@ import Button from '@/components/common/parts/Button';
 import CommonDialog from '@/components/common/parts/CommonDialog';
 import RhfCheckboxLabel from '@/components/common/rhf/RhfCheckboxLabel';
 import RhfInput from '@/components/common/rhf/RhfInput';
-import { useTodoEdit } from '@/hooks/todo/useTodoEdit';
+import { useDoingEdit } from '@/hooks/todo/useDoingEdit';
 import { Task } from '@/lib/common/Task';
 
 type Props = {
   task: Task;
 };
 
-const TodoEdit = (props: Props): JSX.Element => {
+const DoingEdit = (props: Props): JSX.Element => {
   const { task } = props;
   const {
     isOpen,
@@ -22,7 +22,7 @@ const TodoEdit = (props: Props): JSX.Element => {
     loadingTodoDelete,
     isTaskChanged,
     isOverDeadline,
-  } = useTodoEdit({ task });
+  } = useDoingEdit({ task });
   return (
     <>
       {/* ダイアログ */}
@@ -52,6 +52,7 @@ const TodoEdit = (props: Props): JSX.Element => {
 
         {/* 「達成済み」のチェックボックス */}
         <RhfCheckboxLabel label="タスクを始める" name="isStart" control={control} />
+        <RhfCheckboxLabel label="達成済み" name="completed" control={control} />
         <div className="mt-8 flex space-x-2">
           {/* タスク名を変更する */}
           <Button
@@ -81,11 +82,11 @@ const TodoEdit = (props: Props): JSX.Element => {
         className={`mr-2 mt-3 cursor-pointer rounded-md ${!isOverDeadline(task.deadline) || task.completed ? 'bg-primary' : 'bg-red-500'} px-2 py-1 text-body2 text-white`}
       >
         <h3 className="text-h3">{task.title}</h3>
-        <p className="text-sm">{`作成日: ${task.createDate}`}</p>
+        <p className="text-sm">{`開始日: ${task.startDate}`}</p>
         <p className="text-sm">{`期限日: ${task.deadline.replace(/-/g, '/')}`}</p>
       </button>
     </>
   );
 };
 
-export default TodoEdit;
+export default DoingEdit;

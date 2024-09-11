@@ -9,7 +9,7 @@ import { message } from '@/lib/data/message';
 type UseTodoUpdateTask = () => {
   execute: (
     id: string,
-    fields: { title?: string; completed?: boolean; deadline?: string },
+    fields: { title?: string; completed?: boolean; isStart?: boolean; deadline?: string },
   ) => Promise<boolean>;
   loading: boolean;
 };
@@ -20,7 +20,7 @@ export const useTodoUpdateTask: UseTodoUpdateTask = () => {
 
   const execute = async (
     id: string,
-    fields: { title?: string; completed?: boolean; deadline?: string },
+    fields: { title?: string; completed?: boolean; isStart?: boolean; deadline?: string },
   ) => {
     let ret = true;
     setLoading(true);

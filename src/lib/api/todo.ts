@@ -23,7 +23,7 @@ const api = {
   },
   todoUpdate: async (
     id: string,
-    fields: { title?: string; completed?: boolean; deadline?: string },
+    fields: { title?: string; completed?: boolean; isStart?: boolean; deadline?: string },
   ): Promise<void> => {
     const body = {
       id,

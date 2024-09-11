@@ -70,7 +70,9 @@ export const addTask = async (title: string, deadline: string): Promise<UtilResp
     id: Date.now().toString(),
     title,
     completed: false,
-    startDate: getToday(),
+    createDate: getToday(),
+    isStart: false,
+    startDate: '',
     deadline,
   };
   const newTaskList = [...taskList, newTask];
@@ -78,10 +80,10 @@ export const addTask = async (title: string, deadline: string): Promise<UtilResp
   return new SuccessResponse(null);
 };
 
-// id を指定して、title, completed, deadline を更新
+// id を指定して、title, completed, isStart, deadline を更新
 export const updateTask = async (
   id: string,
-  fields: { title?: string; completed?: boolean; deadline?: string },
+  fields: { title?: string; completed?: boolean; isStart?: boolean; deadline?: string },
 ): Promise<UtilResponse<null>> => {
   const getTaskResponse = await getTasks();
   if (!getTaskResponse.isSuccess) {
@@ -97,6 +99,9 @@ export const updateTask = async (
 
   const newTaskList = taskList.map((task) => {
     if (task.id === id) {
+      if (fields.isStart !== task.isStart && fields.isStart === true) {
+        task.startDate = getToday();
+      }
       return { ...task, ...fields };
     } else {
       return task;

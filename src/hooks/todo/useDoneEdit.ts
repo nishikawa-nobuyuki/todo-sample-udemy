@@ -9,13 +9,12 @@ import { Task } from '@/lib/common/Task';
 
 const schema = z.object({
   title: z.string().min(1, 'タスク名を入力してください').max(50, '50文字以内で入力してください'),
-  isStart: z.boolean(),
-  deadline: z.string().min(1, '期限日を入力してください'),
+  completed: z.boolean(),
 });
 
 type TaskInput = z.infer<typeof schema>;
 
-type UseTodoEdit = (args: { task: Task }) => {
+type UseDoneEdit = (args: { task: Task }) => {
   isOpen: boolean;
   control: Control<TaskInput>;
   handleOpen: () => void;
@@ -28,7 +27,7 @@ type UseTodoEdit = (args: { task: Task }) => {
   isOverDeadline: (date: string) => boolean;
 };
 
-export const useTodoEdit: UseTodoEdit = (props) => {
+export const useDoneEdit: UseDoneEdit = (props) => {
   const { task } = props;
   const [isOpen, setIsOpen] = useState(false);
   const { control, handleSubmit, setValue, watch } = useForm<TaskInput>({
@@ -40,16 +39,15 @@ export const useTodoEdit: UseTodoEdit = (props) => {
   };
   const handleOpen = () => {
     setValue('title', task.title);
-    setValue('isStart', task.isStart);
-    setValue('deadline', task.deadline);
+    setValue('completed', task.completed);
     setIsOpen(true);
   };
 
   // タスクを更新
   const apiTodoUpdate = useTodoUpdateTask();
   const onSubmit = async (data: TaskInput) => {
-    const { title, isStart, deadline } = data;
-    const isSuccess = await apiTodoUpdate.execute(task.id, { title, isStart, deadline });
+    const { title, completed } = data;
+    const isSuccess = await apiTodoUpdate.execute(task.id, { title, completed });
     if (!isSuccess) {
       return; // 何もしない
     }
@@ -64,10 +62,7 @@ export const useTodoEdit: UseTodoEdit = (props) => {
   };
 
   // タスクに変更が加えられたかどうか
-  const isTaskChanged =
-    watch('title') !== task.title ||
-    watch('deadline') !== task.deadline ||
-    watch('isStart') !== task.isStart;
+  const isTaskChanged = watch('title') !== task.title || watch('completed') !== task.completed;
 
   // タスクの期限が過ぎているかどうか
   const isOverDeadline = (date: string) => {
