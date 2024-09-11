@@ -14,15 +14,16 @@ const api = {
     const data = await httpWrapper.get('/api/todo/get_tasks', {});
     return data.records.map((record: any) => new Task(record));
   },
-  todoAdd: async (title: string): Promise<void> => {
+  todoAdd: async (title: string, deadline: string): Promise<void> => {
     const body = {
       title,
+      deadline,
     };
     await httpWrapper.post('/api/todo/add_task', body);
   },
   todoUpdate: async (
     id: string,
-    fields: { title?: string; completed?: boolean },
+    fields: { title?: string; completed?: boolean; isStart?: boolean; deadline?: string },
   ): Promise<void> => {
     const body = {
       id,

@@ -7,12 +7,14 @@ import { useTodoAddTask } from '@/hooks/todo/api/useTodoAddTask';
 
 const schema = z.object({
   title: z.string().min(1, 'タスク名を入力してください').max(50, '50文字以内で入力してください'),
+  deadline: z.string().min(1, '期限日を入力してください'),
 });
 
 type TaskInput = z.infer<typeof schema>;
 
 const DEFAULT_TASK_INPUT = {
   title: '',
+  deadline: '',
 };
 
 type UseTodoAdd = () => {
@@ -41,8 +43,8 @@ export const useTodoAdd: UseTodoAdd = () => {
   // タスクを追加
   const apiTodoAdd = useTodoAddTask();
   const onSubmit = async (data: TaskInput) => {
-    const { title } = data;
-    const isSuccess = await apiTodoAdd.execute(title);
+    const { title, deadline } = data;
+    const isSuccess = await apiTodoAdd.execute(title, deadline);
     if (!isSuccess) {
       return; // 何もしない
     }

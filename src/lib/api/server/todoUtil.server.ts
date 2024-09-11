@@ -37,6 +37,15 @@ class ErrorResponse {
 
 export type UtilResponse<T> = SuccessResponse<T> | ErrorResponse;
 
+const getToday = () => {
+  const now = new Date(Date.now());
+  const year = String(now.getFullYear());
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+
+  return `${year}/${month}/${day}`;
+};
+
 // タスクを取得
 export const getTasks = async (): Promise<UtilResponse<Task[]>> => {
   try {
@@ -50,23 +59,32 @@ export const getTasks = async (): Promise<UtilResponse<Task[]>> => {
 };
 
 // タスクの追加
-export const addTask = async (title: string): Promise<UtilResponse<null>> => {
+export const addTask = async (title: string, deadline: string): Promise<UtilResponse<null>> => {
   const getTaskResponse = await getTasks();
   if (!getTaskResponse.isSuccess) {
     return new ErrorResponse(UtilErrorCodes.FAILED_TO_LOAD_TASK);
   }
   const taskList = getTaskResponse.data;
 
-  const newTask: Task = { id: Date.now().toString(), title, completed: false };
+  const newTask: Task = {
+    id: Date.now().toString(),
+    title,
+    completed: false,
+    createDate: getToday(),
+    isStart: false,
+    startDate: '',
+    deadline,
+    completedDate: '',
+  };
   const newTaskList = [...taskList, newTask];
   await fs.writeFile(path.join(DATA_DIR, FILE_NAME), JSON.stringify(newTaskList));
   return new SuccessResponse(null);
 };
 
-// id を指定して、title もしくは completed を更新
+// id を指定して、title, completed, isStart, deadline を更新
 export const updateTask = async (
   id: string,
-  fields: { title?: string; completed?: boolean },
+  fields: { title?: string; completed?: boolean; isStart?: boolean; deadline?: string },
 ): Promise<UtilResponse<null>> => {
   const getTaskResponse = await getTasks();
   if (!getTaskResponse.isSuccess) {
@@ -82,6 +100,14 @@ export const updateTask = async (
 
   const newTaskList = taskList.map((task) => {
     if (task.id === id) {
+      // TODO状態からDoing状態に変更された場合に開始日を取得
+      if (fields.isStart !== task.isStart && fields.isStart === true) {
+        task.startDate = getToday();
+      }
+      // Doing状態からDone状態に変更された場合に達成日を取得
+      if (fields.completed !== task.completed && fields.completed === true) {
+        task.completedDate = getToday();
+      }
       return { ...task, ...fields };
     } else {
       return task;

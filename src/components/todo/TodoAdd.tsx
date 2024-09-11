@@ -19,6 +19,16 @@ const TodoAdd = (): JSX.Element => {
           <label className="text-h3">タスク名</label>
           <RhfInput name="title" control={control} className="mt-2 w-full" placeholder="タスク名" />
         </div>
+        <div className="mb-3">
+          <label className="text-h3">期限</label>
+          <RhfInput
+            name="deadline"
+            control={control}
+            type="date"
+            className="mt-2 w-full"
+            placeholder="期限"
+          />
+        </div>
 
         <div className="mt-8 flex space-x-2">
           {/* タスクを追加する */}

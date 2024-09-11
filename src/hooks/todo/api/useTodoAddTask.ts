@@ -7,7 +7,7 @@ import api from '@/lib/api/todo';
 import { message } from '@/lib/data/message';
 
 type UseTodoAddTask = () => {
-  execute: (title: string) => Promise<boolean>;
+  execute: (title: string, deadline: string) => Promise<boolean>;
   loading: boolean;
 };
 
@@ -15,12 +15,12 @@ export const useTodoAddTask: UseTodoAddTask = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const { openErrorDialog } = useErrorDialog();
 
-  const execute = async (title: string) => {
+  const execute = async (title: string, deadline: string) => {
     let ret = true;
     setLoading(true);
     try {
       // タスクを追加
-      await api.todoAdd(title);
+      await api.todoAdd(title, deadline);
     } catch (e) {
       if (e instanceof APIError) {
         switch (e.code) {
