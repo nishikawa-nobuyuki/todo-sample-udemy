@@ -70,7 +70,7 @@ const DoneEdit = (props: Props): JSX.Element => {
       >
         <h3 className="text-h3">{task.title}</h3>
         <p className="text-sm">{`開始日: ${task.startDate}`}</p>
-        <p className="text-sm">{`達成日: `}</p>
+        <p className="text-sm">{`達成日: ${task.completedDate}`}</p>
       </button>
     </>
   );

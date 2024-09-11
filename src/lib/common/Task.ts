@@ -6,6 +6,7 @@ export class Task {
   isStart: boolean;
   startDate: string;
   deadline: string;
+  completedDate: string;
 
   constructor(taskRecord: {
     id: string;
@@ -15,8 +16,10 @@ export class Task {
     isStart: boolean;
     startDate: string;
     deadline: string;
+    completedDate: string;
   }) {
-    const { id, title, completed, createDate, isStart, startDate, deadline } = taskRecord;
+    const { id, title, completed, createDate, isStart, startDate, deadline, completedDate } =
+      taskRecord;
 
     this.id = id;
     this.title = title;
@@ -25,5 +28,6 @@ export class Task {
     this.isStart = isStart;
     this.startDate = startDate;
     this.deadline = deadline;
+    this.completedDate = completedDate;
   }
 }

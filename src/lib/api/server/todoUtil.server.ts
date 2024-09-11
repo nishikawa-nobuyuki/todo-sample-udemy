@@ -74,6 +74,7 @@ export const addTask = async (title: string, deadline: string): Promise<UtilResp
     isStart: false,
     startDate: '',
     deadline,
+    completedDate: '',
   };
   const newTaskList = [...taskList, newTask];
   await fs.writeFile(path.join(DATA_DIR, FILE_NAME), JSON.stringify(newTaskList));
@@ -99,8 +100,13 @@ export const updateTask = async (
 
   const newTaskList = taskList.map((task) => {
     if (task.id === id) {
+      // TODO状態からDoing状態に変更された場合に開始日を取得
       if (fields.isStart !== task.isStart && fields.isStart === true) {
         task.startDate = getToday();
+      }
+      // Doing状態からDone状態に変更された場合に達成日を取得
+      if (fields.completed !== task.completed && fields.completed === true) {
+        task.completedDate = getToday();
       }
       return { ...task, ...fields };
     } else {
