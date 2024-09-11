@@ -78,7 +78,7 @@ const TodoEdit = (props: Props): JSX.Element => {
 
       <button
         onClick={handleOpen}
-        className={`mr-2 mt-3 cursor-pointer rounded-md ${!isOverDeadline(task.deadline) || task.completed ? 'bg-primary' : 'bg-red-500'} px-2 py-1 text-body2 text-white`}
+        className={`mr-2 mt-3 cursor-pointer rounded-md ${!isOverDeadline(task.deadline) ? 'bg-primary' : 'bg-red-500'} px-2 py-1 text-body2 text-white`}
       >
         <h3 className="text-h3">{task.title}</h3>
         <p className="text-sm">{`作成日: ${task.createDate}`}</p>

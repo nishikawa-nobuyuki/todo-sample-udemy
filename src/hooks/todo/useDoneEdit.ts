@@ -24,7 +24,6 @@ type UseDoneEdit = (args: { task: Task }) => {
   loadingTodoUpdate: boolean;
   loadingTodoDelete: boolean;
   isTaskChanged: boolean;
-  isOverDeadline: (date: string) => boolean;
 };
 
 export const useDoneEdit: UseDoneEdit = (props) => {
@@ -64,11 +63,6 @@ export const useDoneEdit: UseDoneEdit = (props) => {
   // タスクに変更が加えられたかどうか
   const isTaskChanged = watch('title') !== task.title || watch('completed') !== task.completed;
 
-  // タスクの期限が過ぎているかどうか
-  const isOverDeadline = (date: string) => {
-    return new Date(Date.now()) > new Date(date);
-  };
-
   return {
     isOpen,
     control,
@@ -79,6 +73,5 @@ export const useDoneEdit: UseDoneEdit = (props) => {
     loadingTodoUpdate: apiTodoUpdate.loading,
     loadingTodoDelete: apiTodoDelete.loading,
     isTaskChanged,
-    isOverDeadline,
   };
 };
