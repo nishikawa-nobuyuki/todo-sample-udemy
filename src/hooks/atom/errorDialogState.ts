@@ -1,4 +1,4 @@
-import { atom } from 'recoil';
+import { atom, useAtom } from 'jotai';
 
 import { __log } from '@/lib/common/log';
 
@@ -15,19 +15,26 @@ export type ErrorDialogState = {
   labels?: (string | undefined)[];
 };
 
-export const errorDialogState = atom<ErrorDialogState>({
-  key: 'errorDialogState',
-  default: {
-    title: '',
-    content: '',
-    isOpen: false,
-    actions: [
-      {
-        handleClick: () => {
-          // eslint-disable-next-line no-console
-          __log('do nothing');
-        },
+export const errorDialogAtom = atom<ErrorDialogState>({
+  title: '',
+  content: '',
+  isOpen: false,
+  actions: [
+    {
+      handleClick: () => {
+        __log('do nothing');
       },
-    ],
-  },
+    },
+  ],
 });
+
+// errorDialogState を利用するカスタムフック
+export const useGlobalErrorDialogState = (): {
+  globalErrorDialogState: ErrorDialogState;
+  setGlobalErrorDialogState: (
+    update: ErrorDialogState | ((prev: ErrorDialogState) => ErrorDialogState),
+  ) => void;
+} => {
+  const [state, setState] = useAtom(errorDialogAtom);
+  return { globalErrorDialogState: state, setGlobalErrorDialogState: setState };
+};

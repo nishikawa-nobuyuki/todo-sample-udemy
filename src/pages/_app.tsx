@@ -2,7 +2,6 @@ import { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { RecoilRoot } from 'recoil';
 
 import ErrorDialog from '@/components/common/ErrorDialog';
 import ErrorFallbackApp from '@/components/common/ErrorFallbackApp';
@@ -17,14 +16,12 @@ const DynamicContainer = dynamic(() => import('../components/common/NoopContaine
 function MyApp({ Component, pageProps: { ...pageProps } }: AppProps): JSX.Element {
   return (
     <DynamicContainer>
-      <RecoilRoot>
-        <ErrorBoundary FallbackComponent={ErrorFallbackApp}>
-          <Suspense fallback={<LoadingScreen />}>
-            <Component {...pageProps} />
-            <ErrorDialog />
-          </Suspense>
-        </ErrorBoundary>
-      </RecoilRoot>
+      <ErrorBoundary FallbackComponent={ErrorFallbackApp}>
+        <Suspense fallback={<LoadingScreen />}>
+          <Component {...pageProps} />
+          <ErrorDialog />
+        </Suspense>
+      </ErrorBoundary>
     </DynamicContainer>
   );
 }

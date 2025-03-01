@@ -1,53 +1,54 @@
 import { useCallback } from 'react';
-import { useRecoilState } from 'recoil';
 
-import { ErrorDialogState, errorDialogState } from '@/hooks/atom/errorDialogState';
+import { ErrorDialogState } from '@/hooks/atom/errorDialogState';
+import { useGlobalErrorDialogState } from '@/hooks/atom/errorDialogState';
 
-// hook の戻り値
+// hook の戻り値型
 // ダイアログを open するための関数を返す
-type UseErrorDialog = () => {
+type UseErrorDialogReturn = {
   dialog: ErrorDialogState;
-  //エラー表示用
-  openErrorDialog: (openMessageDialogArgs: { title: string; content?: string }) => Promise<void>;
+  // エラー表示用
+  openErrorDialog: (args: { title: string; content?: string }) => Promise<void>;
 };
 
-export const useErrorDialog: UseErrorDialog = () => {
-  const [dialog, setMessageDialog] = useRecoilState(errorDialogState);
+export const useErrorDialog = (): UseErrorDialogReturn => {
+  const { globalErrorDialogState, setGlobalErrorDialogState } = useGlobalErrorDialogState();
 
+  // ダイアログを閉じる関数
   const handleClose = useCallback(() => {
-    setMessageDialog({
-      ...dialog,
+    setGlobalErrorDialogState((prev: ErrorDialogState) => ({
+      ...prev,
       isOpen: false,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    }));
+  }, [setGlobalErrorDialogState]);
 
+  // ダイアログを開く関数（Promise で解決する）
   const openErrorDialog = useCallback(
-    (openErrorDialogArgs: { title: string; content?: string }): Promise<void> => {
-      const { title, content } = openErrorDialogArgs;
-
-      return new Promise((resolve: () => void) => {
+    (args: { title: string; content?: string }): Promise<void> => {
+      const { title, content } = args;
+      return new Promise((resolve) => {
         const okAction = {
           handleClick: () => {
             handleClose();
             resolve();
           },
         };
-        const state: ErrorDialogState = {
-          title: title,
-          content: content,
+
+        const newState: ErrorDialogState = {
+          title,
+          content,
           isOpen: true,
           actions: [okAction],
         };
-        setMessageDialog(state);
+
+        setGlobalErrorDialogState(newState);
       });
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [handleClose, setGlobalErrorDialogState],
   );
 
   return {
-    dialog,
+    dialog: globalErrorDialogState,
     openErrorDialog,
   };
 };
